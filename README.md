@@ -106,3 +106,6 @@ To change providers, simply edit `IMAGE_PROVIDER=` in your `backend/.env` file a
 ## Design System
 
 See `docs/DESIGN_SYSTEM.md` for tokens, components, the nine interaction states, layout, responsive behaviour, and accessibility guidelines.
+
+## LICEMSE
+This project is registered under[MIT LICENSE](https://github.com/BipronathSaha12/prisma-ai/blob/main/LICENSE)
