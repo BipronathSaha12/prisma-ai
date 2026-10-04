@@ -12,6 +12,10 @@ urlpatterns = [
     path("api/images/", include("images.urls")),
 ]
 
-if settings.DEBUG:
-    # In production nginx serves /media/ directly; see deploy/nginx.conf.
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+from django.urls import re_path
+from django.views.static import serve
+
+# For a Render deployment without Nginx or S3, we must serve media files through Django.
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
