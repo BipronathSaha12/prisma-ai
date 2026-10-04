@@ -1,0 +1,32 @@
+databases:
+  - name: prisma-db
+    databaseName: prisma_ai
+    user: prisma_user
+    plan: free
+
+services:
+  - type: web
+    name: prisma-api
+    env: python
+    rootDir: backend
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: prisma-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.prod
+      - key: IMAGE_PROVIDER
+        value: pollinations
+      - key: DJANGO_ALLOWED_HOSTS
+        value: prisma-api.onrender.com
+      - key: MEDIA_BASE_URL
+        value: https://prisma-api.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://your-frontend.vercel.app # TODO: Update this to your real Vercel URL

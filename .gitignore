@@ -1,0 +1,44 @@
+# --- Secrets --------------------------------------------------------------
+# Never commit a real environment file. `.env.example` is the template.
+.env
+.env.*
+!.env.example
+!.env.development
+*.pem
+*.key
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+rename.py
+backend/create_users.py
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# --- Django ---------------------------------------------------------------
+backend/media/
+backend/staticfiles/
+!backend/staticfiles/.gitkeep
+*.sqlite3
+*.log
+
+# --- Node -----------------------------------------------------------------
+node_modules/
+dist/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# --- Editors and OS -------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# --- Vercel ---------------------------------------------------------------
+.vercel

@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: var(--prisma-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--prisma-canvas);
+    color: var(--prisma-text);
+    font-family: var(--prisma-font-sans);
+    font-size: var(--prisma-text-base);
+    line-height: var(--prisma-leading-normal);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    margin: 0;
+    line-height: var(--prisma-leading-tight);
+    letter-spacing: var(--prisma-tracking-tight);
+    font-weight: 600;
+  }
+
+  p { margin: 0; }
+
+  /* PRD 9.9: focus must always be visible, and it is the same shape on every
+     control so keyboard users learn it once. */
+  :focus-visible {
+    outline: 2px solid var(--prisma-focus);
+    outline-offset: 2px;
+    border-radius: var(--prisma-radius-sm);
+  }
+
+  /* Mouse users do not get an outline, but nothing loses focus silently. */
+  :focus:not(:focus-visible) { outline: none; }
+
+  button, input, textarea, select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button:not(:disabled) { cursor: pointer; }
+
+  img { display: block; max-width: 100%; height: auto; }
+
+  ::selection {
+    background: var(--prisma-accent-soft);
+    color: var(--prisma-text);
+  }
+
+  /* PRD 9.9: reduced motion support. Transitions collapse to a near-instant
+     step rather than being removed, so state changes are still perceptible. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Skip link: first tab stop on every page. */
+  .prisma-skip-link {
+    position: absolute;
+    left: 0.75rem;
+    top: -100%;
+    z-index: 100;
+    padding: 0.625rem 1rem;
+    border-radius: var(--prisma-radius-md);
+    background: var(--prisma-accent);
+    color: var(--prisma-accent-fg);
+    font-size: var(--prisma-text-sm);
+    font-weight: 600;
+    transition: top var(--prisma-duration-fast) var(--prisma-ease);
+  }
+  .prisma-skip-link:focus {
+    top: 0.75rem;
+  }
+
+  /* Checkerboard behind a transparent image so alpha is visible. */
+  .prisma-alpha-grid {
+    background-image:
+      linear-gradient(45deg, var(--prisma-inset) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--prisma-inset) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--prisma-inset) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--prisma-inset) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  }
+}
+
+@layer utilities {
+  .prisma-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .prisma-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--prisma-text) 7%, transparent),
+      transparent
+    );
+    animation: prisma-sweep 1.6s var(--prisma-ease) infinite;
+  }
+
+  @keyframes prisma-sweep {
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes prisma-rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .prisma-rise {
+    animation: prisma-rise var(--prisma-duration-slow) var(--prisma-ease) both;
+  }
+
+  @keyframes prisma-spin {
+    to { transform: rotate(360deg); }
+  }
+}
