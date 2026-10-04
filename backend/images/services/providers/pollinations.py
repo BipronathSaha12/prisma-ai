@@ -25,8 +25,16 @@ class PollinationsProvider(ImageProvider):
         url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width={request.width}&height={request.height}&nologo=true"
         
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Prisma-AI/1.0'})
+            # Spoof a standard Chrome User-Agent to prevent Cloudflare from instantly blocking Render's datacenter IPs
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'image/jpeg, image/png, image/webp, */*'
+            }
+            req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=90) as response:
+                content_type = response.headers.get('Content-Type', '')
+                if 'text/html' in content_type:
+                    raise ProviderUnavailable("Pollinations AI blocked the request (Cloudflare proxy).")
                 image_bytes = response.read()
         except (urllib.error.URLError, TimeoutError) as exc:
             if isinstance(exc, TimeoutError) or (hasattr(exc, 'reason') and isinstance(exc.reason, TimeoutError)):
