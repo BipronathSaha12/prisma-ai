@@ -26,10 +26,10 @@ class PollinationsProvider(ImageProvider):
         
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'Prisma-AI/1.0'})
-            with urllib.request.urlopen(req, timeout=45) as response:
+            with urllib.request.urlopen(req, timeout=90) as response:
                 image_bytes = response.read()
-        except urllib.error.URLError as exc:
-            if isinstance(exc.reason, TimeoutError):
+        except (urllib.error.URLError, TimeoutError) as exc:
+            if isinstance(exc, TimeoutError) or (hasattr(exc, 'reason') and isinstance(exc.reason, TimeoutError)):
                 raise ProviderTimeout("Pollinations timed out") from exc
             raise ProviderUnavailable(str(exc)) from exc
         except Exception as exc:
